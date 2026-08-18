@@ -1,8 +1,47 @@
 ## Notes App
 ### By: Aishath Nuhza Masood | UWE ID: 24019755
+https://github.com/naoyuumii/NotesApp
 
 Notes App is a mobile applicztion that was developed using React Native and Expo. It allows the user to create, edit and delete notes. There are organizational features such as seaching and favouriting also included in this app and all of this data is stored locally on the device using AsyncStorage. 
 ---
+
+## Installation & Run Instructions
+
+### Prerequisites
+
+Before running the application, make sure you have the following installed:
+
+Node.js and npm
+Expo Go on an Android or iOS device
+A stable internet connection for installing dependencies and running the Expo development server
+
+#### 1. Clone the Repository
+
+Clone the project from GitHub:
+
+git clone https://github.com/naoyuumii/NotesApp.git
+
+Navigate into the project directory:
+
+cd NotesApp
+
+#### 2. Install Dependencies
+
+Install all required project dependencies using npm:
+
+npm install
+
+#### 3. Start the Application
+
+npx expo start
+
+This will start the Expo development server and display a QR code in the terminal.
+
+#### 4. Run on a Physical Device
+
+Install Expo Go on your Android or iOS device.
+
+Make sure your computer and mobile device are connected to the same network. Scan the QR code displayed by Expo to open the application in Expo Go.
 
 ## Features of the App
 
@@ -103,40 +142,3 @@ The application prevents users from saving notes without:
 
 Given more time I would implement a more robust notes app with more organisational features such as colour coding and grouping notes together. 
 
-## Installation & Run Instructions
-
-### Prerequisites
-
-Before running the application, make sure you have the following installed:
-
-Node.js and npm
-Expo Go on an Android or iOS device, or an Android/iOS emulator
-A stable internet connection for installing dependencies and running the Expo development server
-
-#### 1. Clone the Repository
-
-Clone the project from GitHub:
-
-git clone https://github.com/naoyuumii/NotesApp.git
-
-Navigate into the project directory:
-
-cd NotesApp
-
-#### 2. Install Dependencies
-
-Install all required project dependencies using npm:
-
-npm install
-
-#### 3. Start the Application
-
-npx expo start
-
-This will start the Expo development server and display a QR code in the terminal.
-
-#### 4. Run on a Physical Device
-
-Install Expo Go on your Android or iOS device.
-
-Make sure your computer and mobile device are connected to the same network. Scan the QR code displayed by Expo to open the application in Expo Go.
