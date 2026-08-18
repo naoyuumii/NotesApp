@@ -19,21 +19,29 @@ A stable internet connection for installing dependencies and running the Expo de
 
 Clone the project from GitHub:
 
+```bash
 git clone https://github.com/naoyuumii/NotesApp.git
+```
 
 Navigate into the project directory:
 
+```bash
 cd NotesApp
+```
 
 #### 2. Install Dependencies
 
 Install all required project dependencies using npm:
 
+```
 npm install
+```
 
 #### 3. Start the Application
 
+```
 npx expo start
+```
 
 This will start the Expo development server and display a QR code in the terminal.
 
