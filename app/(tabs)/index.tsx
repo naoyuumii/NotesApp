@@ -1,98 +1,385 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import { useNoteStore } from '../../store/notestorage';
+import { useState } from 'react';
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
+export default function NotesScreen() {
 
-export default function HomeScreen() {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const notes = useNoteStore((state) => state.notes);
+
+  const toggleFavourite = useNoteStore(
+  (state) => state.toggleFavourite);
+
+  const deleteNote = useNoteStore(
+  (state) => state.deleteNote);
+
+  const handleDeleteNote = (id: string, title: string) => {
+  Alert.alert('Delete note', `Are you sure you want to delete "${title}"?`,[
+      {text: 'Cancel', style: 'cancel',},
+      {text: 'Delete', style: 'destructive',
+      onPress: () => deleteNote(id),},
+    ]);};
+
+  const filteredNotes = notes.filter((note) => {
+  const query = searchQuery.toLowerCase().trim();
+
+  if (!query) {
+    return true;
+  }
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
-
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    note.title.toLowerCase().includes(query) ||
+    note.content.toLowerCase().includes(query) ||
+    note.category.toLowerCase().includes(query)
   );
-}
+});
+
+  return (
+    <View style={styles.container}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.content}
+      >
+        
+        {/* Header */}
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.title}>NotesApp</Text>
+            <Text style={styles.subtitle}>
+              Your notes, all in one place.
+            </Text>
+          </View>
+
+          <View style={styles.headerIcon}>
+            <Ionicons
+              name="document-text-outline"
+              size={24}
+              color="#4F46E5"
+            />
+          </View>
+        </View>
+
+        {/* Search */}
+        <View style={styles.searchContainer}>
+          <Ionicons name="search-outline" size={20} color="#64748B" />
+
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search notes..."
+            placeholderTextColor="#94A3B8"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            accessibilityLabel="Search notes"
+          />
+        </View>
+
+        {/* Section title */}
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>My Notes</Text>
+
+          <Text style={styles.noteCount}>
+            {filteredNotes.length}{' '}
+            {filteredNotes.length === 1 ? 'note' : 'notes'}
+          </Text>
+        </View>
+
+        {/* Notes */}
+         {filteredNotes.map((note) => (
+          <Pressable
+          key={note.id}
+          style={({ pressed }) => [
+            styles.noteCard,
+            pressed && styles.noteCardPressed,
+          ]}
+
+          onPress={() =>
+            router.push({
+              pathname: '/note-editor',
+              params: { id: note.id },
+            })
+            }
+          >
+          <View style={styles.noteTopRow}>
+            <Text style={styles.noteTitle} numberOfLines={1}
+            >
+            {note.title}
+            </Text>
+            <View style={styles.noteActions}>
+            <Pressable
+              onPress={() => toggleFavourite(note.id)}
+              accessibilityLabel={
+                note.isFavourite
+                  ? `Remove ${note.title} from favourites`
+                  : `Add ${note.title} to favourites`
+              }
+              hitSlop={10}
+            >
+          <Ionicons
+            name={note.isFavourite ? 'star' : 'star-outline'}
+            size={21}
+            color={note.isFavourite ? '#F59E0B' : '#94A3B8'}
+          />
+          </Pressable>
+          <Pressable
+            onPress={() =>
+              handleDeleteNote(note.id, note.title)
+            }
+            accessibilityLabel={`Delete ${note.title}`}
+            hitSlop={10}
+          >
+          <Ionicons
+            name="trash-outline"
+            size={21}
+            color="#EF4444"
+          />
+          </Pressable>
+          </View>
+          </View>
+
+          <Text style={styles.noteContent} numberOfLines={2}>
+            {note.content}
+          </Text>
+
+          <View style={styles.categoryContainer}>
+          <Text style={styles.categoryText}>
+            {note.category}
+          </Text>
+          </View>
+          </Pressable>
+        ))}
+
+        {filteredNotes.length === 0 && (
+        <View style={styles.emptyContainer}>
+          <Ionicons
+            name="document-text-outline"
+            size={50}
+            color="#CBD5E1"
+          />
+
+          <Text style={styles.emptyTitle}>
+            {notes.length === 0
+              ? 'No notes yet'
+              : 'No matching notes'}
+          </Text>
+
+          <Text style={styles.emptyText}>
+            {notes.length === 0
+              ? 'Tap the + button to create your first note.'
+              : 'Try a different search term.'}
+          </Text>
+        </View>
+        )}
+
+      </ScrollView>
+      {/* Add button */}
+      <Pressable
+        style={({ pressed }) => [
+          styles.addButton,
+          pressed && styles.addButtonPressed,
+        ]}
+        onPress={() => router.push('/note-editor')}
+        accessibilityLabel="Add new note"
+      >
+      <Ionicons name="add" size={30} color="#FFFFFF" />
+      </Pressable>
+      </View>
+        );
+      }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+    backgroundColor: '#F8FAFC',
+  },
+
+  content: {
+    padding: 24,
+    paddingTop: 65,
+    paddingBottom: 120,
+  },
+
+  header: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'space-between',
+    marginBottom: 24,
   },
-  stepContainer: {
-    gap: 8,
+
+  title: {
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#111827',
+  },
+
+  subtitle: {
+    fontSize: 15,
+    color: '#64748B',
+    marginTop: 5,
+  },
+
+  headerIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 16,
+    backgroundColor: '#EEF2FF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  searchContainer: {
+    height: 52,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    marginBottom: 28,
+  },
+
+  searchInput: {
+    flex: 1,
+    marginLeft: 10,
+    fontSize: 15,
+    color: '#111827',
+  },
+
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 14,
+  },
+
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#111827',
+  },
+
+  noteCount: {
+    fontSize: 13,
+    color: '#64748B',
+  },
+
+  noteCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    padding: 18,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+
+  noteCardPressed: {
+    opacity: 0.75,
+  },
+
+  noteTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+
+  noteTitle: {
+    flex: 1,
+    fontSize: 17,
+    fontWeight: '700',
+    color: '#111827',
+    marginRight: 10,
   },
+
+  noteContent: {
+    fontSize: 14,
+    lineHeight: 21,
+    color: '#64748B',
+    marginBottom: 14,
+  },
+
+  categoryContainer: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#EEF2FF',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8,
+  },
+
+  categoryText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#4F46E5',
+  },
+
+  addButton: {
+    position: 'absolute',
+    right: 24,
+    bottom: 92,
+    width: 60,
+    height: 60,
+    borderRadius: 20,
+    backgroundColor: '#4F46E5',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    shadowColor: '#4F46E5',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+
+  addButtonPressed: {
+    transform: [{ scale: 0.95 }],
+  },
+  emptyContainer: {
+  alignItems: 'center',
+  justifyContent: 'center',
+  paddingVertical: 70,
+},
+
+emptyTitle: {
+  fontSize: 18,
+  fontWeight: '700',
+  color: '#475569',
+  marginTop: 14,
+},
+
+emptyText: {
+  fontSize: 14,
+  color: '#94A3B8',
+  textAlign: 'center',
+  marginTop: 6,
+  paddingHorizontal: 30,
+},
+
+noteActions: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: 16,
+},
 });

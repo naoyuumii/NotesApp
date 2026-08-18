@@ -1,50 +1,97 @@
-# Welcome to your Expo app 👋
+## Notes App
+### By: Aishath Nuhza Masood | UWE ID: 24019755
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Notes App is a mobile applicztion that was developed using React Native and Expo. It allows the user to create, edit and delete notes. There are organizational features such as seaching and favouriting also included in this app and all of this data is stored locally on the device. 
+---
 
-## Get started
+## Features of the App
 
-1. Install dependencies
+### Creating Notes
+- Users can create notes by entering a title, content and category.
+- Notes can also be marked as favourites when they are created.
 
-   ```bash
-   npm install
-   ```
+### Editing  Notes
+- Existing notes can be opened and edited. 
+- Users can change the title, content, category and favourite status.
 
-2. Start the app
+### Delete Notes
+- Users can delete individual notes.
+- Once user confirms the note will be deleted.
 
-   ```bash
-   npx expo start
-   ```
+### Search
+The search feature allows users to search notes by:
+- Title
+- Content
+- Category
 
-In the output, you'll find options to open the app in a
+### Categories
+Notes can be organised into:
+- Personal
+- University
+- Work
+- Ideas
+- Other
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Favourites
+- Users can mark notes as favourites and view their favourite notes from the Favourites screen.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Persistent Storage
+- Notes are stored locally using AsyncStorage. Notes, edits and favourite states remain available after restarting the application.
 
-## Get a fresh project
+### State Management
+- Zustand is used to manage the application's note state.
 
-When you're ready, run:
+### Settings
+The Settings screen provides:
 
-```bash
-npm run reset-project
-```
+- Application information
+- Application version
+- Number of stored notes
+- Clear all notes functionality
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Validation
+The application prevents users from saving notes without:
+- A title
+- Note content
 
-## Learn more
+### Empty State
+- When no notes exist, the application displays an informative empty-state message encouraging the user to create their first note.
 
-To learn more about developing your project with Expo, look at the following resources:
+---
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Screenshots
 
-## Join the community
+### Home / Notes
 
-Join our community of developers creating universal apps.
+![Home Screen](assets/screenshots/homescreen.jpg)
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Search
+
+![Search Screen](assets/screenshots/searched.jpg)
+
+### New Note
+
+![New Note](assets/screenshots/newnote.jpg)
+
+### Edit Note
+
+![Edit Note](assets/screenshots/editnote.jpg)
+
+### Favourites
+
+![Favourites](assets/screenshots/favourites.jpg)
+
+### Settings
+
+![Settings](assets/screenshots/settings.jpg)
+
+### Delete Confirmation
+
+![Delete Confirmation](assets/screenshots/clearall.jpg)
+
+### Empty State
+
+![Empty State](assets/screenshots/blankscreen.jpg)
+
+
+
